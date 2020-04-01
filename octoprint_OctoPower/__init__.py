@@ -80,11 +80,19 @@ class OctopowerPlugin(octoprint.plugin.StartupPlugin,
 		if plug == None:
 			return
 
-		if event in (Events.PRINT_DONE, Events.PRINT_FAILED, Events.PRINT_CANCELLED, Events.POWER_OFF):
+		if event == Events.POWER_OFF:
+			plug.off()
+		elif event ==  Events.POWER_ON:
+			plug.on()
+
+		if event in (Events.PRINT_DONE, Events.PRINT_FAILED, Events.PRINT_CANCELLED):
 			self._logger.info("Turning {} off".format(plug.getName()))
 
-			plug.off()
-		elif event in (Events.PRINT_STARTED , Events.POWER_ON):
+			self._printer.commands("M81")
+
+			
+		elif event in (Events.PRINT_STARTED, ):
+			self._printer.commands("M80")
 			plug.on()
 
 	##~~ Softwareupdate hook
