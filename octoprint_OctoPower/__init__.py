@@ -9,6 +9,8 @@ from octoprint_OctoPower.plugmanager import PlugManager
 
 from octoprint.events import Events
 
+from threading import Timer
+
 class OctopowerPlugin(octoprint.plugin.StartupPlugin,
 						octoprint.plugin.TemplatePlugin,
 						octoprint.plugin.SettingsPlugin,
@@ -16,6 +18,8 @@ class OctopowerPlugin(octoprint.plugin.StartupPlugin,
 						octoprint.plugin.SimpleApiPlugin):
 
 	__plugManager = PlugManager()
+
+	__powerOffDelayTimer = None
 
 	def get_api_commands(self):
 		return dict(
@@ -85,7 +89,9 @@ class OctopowerPlugin(octoprint.plugin.StartupPlugin,
 			return
 
 		if event == Events.POWER_OFF:
-			plug.off()
+			#Wait a few seconds before powering off
+			__powerOffDelayTimer = Timer(5.0, lambda : plug.off())
+			__powerOffDelayTimer.start()
 		elif event ==  Events.POWER_ON:
 			plug.on()
 
