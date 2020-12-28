@@ -1,0 +1,16 @@
+<legend>Smart Plug Assignment</legend>
+<form class="form-horizontal">
+    {% for profile in plugin_OctoPower_profiles %}
+        <div class="control-group">
+            <label for="device" class="control-label">{{ profile }}</label>
+            <div class="controls">
+                <select id="device" data-bind="value: settings.plugins.OctoPower.profiles.{{ profile }}">
+                    <option value="none">None</option>
+                    {% for plug in plugin_OctoPower_plugDevices %}
+                        <option value="{{ plug['uuid'] }}">{{ plug['name'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    {% endfor %}
+</form>

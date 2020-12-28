@@ -10,8 +10,8 @@ from octoprint_OctoPower.plugmanager import PlugManager
 from octoprint.events import Events
 
 class OctopowerPlugin(octoprint.plugin.StartupPlugin,
-						octoprint.plugin.SettingsPlugin,
 						octoprint.plugin.TemplatePlugin,
+						octoprint.plugin.SettingsPlugin,
 						octoprint.plugin.EventHandlerPlugin,
 						octoprint.plugin.SimpleApiPlugin):
 
@@ -65,7 +65,11 @@ class OctopowerPlugin(octoprint.plugin.StartupPlugin,
 			return self.__getPlugFromProfile(curProfile['name'])
 
 	def __getPlugFromProfile(self, profileName):
-			plugUUID = self._settings.get(['profiles'])[profileName]
+			profiles = self._settings.get(['profiles'])
+			if profileName not in profiles:
+				return None
+			
+			plugUUID = profiles[profileName]
 
 			if plugUUID != "none":
 				plug = self.__plugManager.findCachedPlug(plugUUID)
